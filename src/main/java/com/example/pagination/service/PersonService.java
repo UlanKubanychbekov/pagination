@@ -23,12 +23,6 @@ public class PersonService {
     private final PersonRepository repository;
     private final ViewMapper viewMapper;
 
- public PersonResponseView getAllPersons(String text, int page, int size){
-     Pageable pageable = PageRequest.of(page, size);
-     PersonResponseView personResponseView = new PersonResponseView();
-     personResponseView.setPersonResponses(view(search(text,pageable)));
-     return personResponseView;
- }
  public List <PersonResponse> view (List<Person> people){
      List<PersonResponse> personResponses = new ArrayList<>();
      for(Person p : people){
@@ -38,7 +32,13 @@ public class PersonService {
  }
  public List<Person> search(String name, Pageable pageable){
      String text = name == null ? "":name;
-    return repository.searchPagination(text,pageable);
+    return repository.searchPagination(text.toUpperCase(),pageable);
 
  }
+    public PersonResponseView getAllPersons(String text, int page, int size){
+        Pageable pageable = PageRequest.of(page-1, size);
+        PersonResponseView personResponseView = new PersonResponseView();
+        personResponseView.setPersonResponses(view(search(text,pageable)));
+        return personResponseView;
+    }
 }
